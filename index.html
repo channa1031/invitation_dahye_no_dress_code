@@ -62,7 +62,7 @@ body.no-scroll{overflow:hidden;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ── COVER ── */
-.cover{min-height:122vh;background:var(--green);display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;}
+.cover{min-height:108vh;background:var(--green);display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;}
 .cover-stripe{width:100%;height:18px;flex-shrink:0;background:repeating-linear-gradient(90deg,#574538 0,#574538 6px,#e3ded6 6px,#e3ded6 12px);}
 .cover::after{content:"";position:absolute;top:18px;left:12px;right:12px;bottom:18px;border:1px solid rgba(200,180,160,.2);pointer-events:none;z-index:0;}
 .cover-inner{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 32px 28px;width:100%;position:relative;z-index:1;}
@@ -188,7 +188,7 @@ footer p{font-size:10px;letter-spacing:2px;line-height:2.6;color:rgba(227,222,21
 
 <!-- 음악 -->
 <button class="music-btn" id="musicBtn" title="음악 켜기/끄기">♪</button>
-<audio id="bgm" loop><source src="bgm.mp3" type="audio/mp3"></audio>
+<audio id="bgm" loop preload="auto"><source src="bgm.mp3" type="audio/mp3"></audio>
 <div class="toast" id="toast"></div>
 
 <!-- 커버 -->
@@ -404,14 +404,22 @@ lb.addEventListener("click",function(e){if(e.target===lb)closeLb();});
   },{passive:true});
 })();
 
-var playing=true, bgm=document.getElementById("bgm");
+var playing=true, bgmReady=false, bgmStartPending=false;
+var bgm=document.getElementById("bgm");
+function fadeIn(dur){bgm.volume=0;var s=0.05,iv=dur/20,t=setInterval(function(){bgm.volume=Math.min(1,bgm.volume+s);if(bgm.volume>=1)clearInterval(t);},iv);}
+function startBgm(){
+  if(!playing)return;
+  if(!bgmReady){bgmStartPending=true;return;}
+  bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
+}
 bgm.addEventListener("loadedmetadata",function(){bgm.currentTime=58;});
+bgm.addEventListener("seeked",function(){
+  if(bgmReady)return;
+  bgmReady=true;
+  if(bgmStartPending){bgmStartPending=false;startBgm();}
+  else{bgm.play().then(function(){fadeIn(2000);}).catch(function(){});}
+});
  /* 자동재생: 브라우저 정책상 첫 터치 후 실행 */
- function fadeIn(dur){bgm.volume=0;var s=0.05,iv=dur/20,t=setInterval(function(){bgm.volume=Math.min(1,bgm.volume+s);if(bgm.volume>=1)clearInterval(t);},iv);}
- function startBgm(){
-   if(!playing)return;
-   bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
- }
  document.addEventListener("touchstart",startBgm,{once:true});
  document.addEventListener("click",startBgm,{once:true});
  bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
