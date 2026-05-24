@@ -404,21 +404,13 @@ lb.addEventListener("click",function(e){if(e.target===lb)closeLb();});
   },{passive:true});
 })();
 
-var playing=true, bgmReady=false, bgmStartPending=false;
-var bgm=document.getElementById("bgm");
+var playing=true, bgm=document.getElementById("bgm");
+bgm.addEventListener("loadedmetadata",function(){bgm.currentTime=58;});
 function fadeIn(dur){bgm.volume=0;var s=0.05,iv=dur/20,t=setInterval(function(){bgm.volume=Math.min(1,bgm.volume+s);if(bgm.volume>=1)clearInterval(t);},iv);}
 function startBgm(){
   if(!playing)return;
-  if(!bgmReady){bgmStartPending=true;return;}
   bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
 }
-bgm.addEventListener("loadedmetadata",function(){bgm.currentTime=58;});
-bgm.addEventListener("seeked",function(){
-  if(bgmReady)return;
-  bgmReady=true;
-  if(bgmStartPending){bgmStartPending=false;startBgm();}
-  else{bgm.play().then(function(){fadeIn(2000);}).catch(function(){});}
-});
  /* 자동재생: 브라우저 정책상 첫 터치 후 실행 */
  document.addEventListener("touchstart",startBgm,{once:true});
  document.addEventListener("click",startBgm,{once:true});
