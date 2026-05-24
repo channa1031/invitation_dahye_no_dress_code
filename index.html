@@ -422,8 +422,23 @@ function startBgm(){
   bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
 }
 bgm.play().then(function(){fadeIn(2000);}).catch(function(){
-  document.addEventListener("touchstart",startBgm,{once:true});
-  document.addEventListener("click",startBgm,{once:true});
+  var unlocked=false;
+  function tryUnlock(){
+    if(unlocked)return; unlocked=true;
+    bgm.volume=0;
+    bgm.play().then(function(){
+      bgm.pause();
+      window.addEventListener("scroll",function(){
+        if(playing) bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
+      },{once:true,passive:true});
+    }).catch(function(){
+      document.addEventListener("touchstart",function(){
+        if(playing) bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
+      },{once:true,passive:true});
+    });
+  }
+  document.addEventListener("touchstart",tryUnlock,{once:true,passive:true});
+  document.addEventListener("click",tryUnlock,{once:true});
 });
  document.getElementById("musicBtn").addEventListener("click",function(e){
    e.stopPropagation();
