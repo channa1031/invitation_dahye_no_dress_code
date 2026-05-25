@@ -197,7 +197,7 @@ footer p{font-size:10px;letter-spacing:2px;line-height:2.6;color:rgba(227,222,21
 
 <!-- 음악 -->
 <button class="music-btn" id="musicBtn" title="음악 켜기/끄기">♪</button>
-<audio id="bgm" loop preload="auto"><source src="bgm.mp3" type="audio/mp3"></audio>
+<audio id="bgm" loop preload="auto" autoplay muted><source src="bgm.mp3" type="audio/mp3"></audio>
 <div class="toast" id="toast"></div>
 
 <!-- 커버 -->
@@ -417,22 +417,19 @@ lb.addEventListener("click",function(e){if(e.target===lb)closeLb();});
 var playing=true, bgm=document.getElementById("bgm");
 bgm.addEventListener("loadedmetadata",function(){bgm.currentTime=33;});
 function fadeIn(dur){bgm.volume=0;var s=0.05,iv=dur/20,t=setInterval(function(){bgm.volume=Math.min(1,bgm.volume+s);if(bgm.volume>=1)clearInterval(t);},iv);}
-function startBgm(){
+function unmute(){
   if(!playing)return;
-  bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
+  if(bgm.muted){bgm.muted=false;fadeIn(2000);}
+  else if(bgm.paused){bgm.play().then(function(){fadeIn(2000);}).catch(function(){});}
 }
-bgm.play().then(function(){fadeIn(2000);}).catch(function(){
-  function onInteract(){
-    if(playing) bgm.play().then(function(){fadeIn(2000);}).catch(function(){});
-  }
-  document.addEventListener("touchstart",onInteract,{once:true,passive:true});
-  document.addEventListener("click",onInteract,{once:true});
+setTimeout(unmute,200);
+document.addEventListener("touchstart",unmute,{once:true,passive:true});
+document.addEventListener("click",unmute,{once:true});
+document.getElementById("musicBtn").addEventListener("click",function(e){
+  e.stopPropagation();
+  if(playing){bgm.pause();playing=false;this.classList.add("muted");}
+  else{bgm.muted=false;bgm.volume=0;bgm.play().then(function(){fadeIn(2000);}).catch(function(){});playing=true;this.classList.remove("muted");}
 });
- document.getElementById("musicBtn").addEventListener("click",function(e){
-   e.stopPropagation();
-   if(playing){bgm.pause();playing=false;this.classList.add("muted");}
-   else{bgm.volume=0;bgm.play().then(function(){fadeIn(2000);}).catch(function(){});playing=true;this.classList.remove("muted");}
- });
 
 /* ── 스크롤 페이드인 ── */
 var obs=new IntersectionObserver(function(entries){
