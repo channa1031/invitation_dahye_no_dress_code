@@ -198,6 +198,9 @@ footer p{font-size:10px;letter-spacing:2px;line-height:2.6;color:rgba(227,222,21
 @keyframes floatDove{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
 @keyframes coverZoom{from{transform:scale(1.05)}to{transform:scale(1)}}
 </style>
+<script>
+(function(){var n=["P00.jpeg","P01.jpg","P02.jpg","P03.jpg","P04.jpg","P05.jpg","P06.jpg","P07.jpg","P08.jpg","P09.jpg","P10.jpg","P11.jpg","P13.jpg","P14.jpg","P15.jpg","P16.jpg","P17.jpg","P18.jpg","P19.jpg","P20.jpg","P21.jpg","P22.jpg","P23.jpg","P24.jpg","P25.jpg","P26.jpg","P27.jpg"];window.__galleryCache=n.map(function(s){var i=new Image();i.src="photos/"+s;return i;});})();
+</script>
 </head>
 <body>
 
@@ -360,7 +363,7 @@ var grid=document.getElementById("galleryGrid");
 imgs.forEach(function(src,i){
   var d=document.createElement("div"); d.className="gallery-item";
   d.style.transitionDelay=(i%3)*0.08+'s';
-  var img=document.createElement("img"); img.src=src; img.loading="lazy";
+  var img=document.createElement("img"); img.src=src; img.loading="eager"; img.decoding="async";
   d.appendChild(img);
   d.addEventListener("click",function(){openLb(i);});
   grid.appendChild(d);
