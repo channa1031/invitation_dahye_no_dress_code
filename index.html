@@ -125,8 +125,7 @@ section.visible{opacity:1;transform:translateY(0);}
 .gallery-section{background:var(--bg);padding:64px 0;}
 .gallery-section .section-label,.gallery-section .ornament{padding:0 36px;}
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
-.gallery-item{aspect-ratio:2/3;overflow:hidden;cursor:pointer;background:#d8d0c8;transform:translateY(22px);transition:transform .55s ease;}
-.gallery-section.visible .gallery-item{transform:translateY(0);}
+.gallery-item{aspect-ratio:2/3;overflow:hidden;cursor:pointer;background:#d8d0c8;}
 .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
 
 
@@ -199,7 +198,7 @@ footer p{font-size:10px;letter-spacing:2px;line-height:2.6;color:rgba(227,222,21
 @keyframes coverZoom{from{transform:scale(1.05)}to{transform:scale(1)}}
 </style>
 <script>
-(function(){var n=["P00.jpeg","P01.jpg","P02.jpg","P03.jpg","P04.jpg","P05.jpg","P06.jpg","P07.jpg","P08.jpg","P09.jpg","P10.jpg","P11.jpg","P13.jpg","P14.jpg","P15.jpg","P16.jpg","P17.jpg","P18.jpg","P19.jpg","P20.jpg","P21.jpg","P22.jpg","P23.jpg","P24.jpg","P25.jpg","P26.jpg","P27.jpg"];window.__galleryCache=n.map(function(s){var i=new Image();i.src="photos/"+s;return i;});})();
+(function(){var n=["P00.jpeg","P01.jpg","P02.jpg","P03.jpg","P04.jpg","P05.jpg","P06.jpg","P07.jpg","P08.jpg","P09.jpg","P10.jpg","P11.jpg","P13.jpg","P14.jpg","P15.jpg","P16.jpg","P17.jpg","P18.jpg","P19.jpg","P20.jpg","P21.jpg","P22.jpg","P23.jpg","P24.jpg","P25.jpg","P26.jpg","P27.jpg"];window.__galleryCache=n.map(function(s){var i=new Image();i.fetchPriority="high";i.src="photos/"+s;return i;});})();
 </script>
 </head>
 <body>
@@ -362,8 +361,7 @@ var imgs=["photos/P00.jpeg","photos/P01.jpg","photos/P02.jpg","photos/P03.jpg","
 var grid=document.getElementById("galleryGrid");
 imgs.forEach(function(src,i){
   var d=document.createElement("div"); d.className="gallery-item";
-  d.style.transitionDelay=(i%3)*0.08+'s';
-  var img=document.createElement("img"); img.src=src; img.loading="eager"; img.decoding="async";
+  var img=document.createElement("img"); img.src=src; img.loading="eager"; img.decoding="async"; img.fetchPriority="high";
   d.appendChild(img);
   d.addEventListener("click",function(){openLb(i);});
   grid.appendChild(d);
