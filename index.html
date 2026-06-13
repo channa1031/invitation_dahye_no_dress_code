@@ -456,10 +456,11 @@ function userActivate(){
 }
 tryAutoplay();
 bgm.addEventListener("canplay",tryAutoplay);
-["touchstart","touchend","click","pointerdown","keydown"].forEach(function(evt){
-  document.addEventListener(evt,userActivate,{once:true,passive:true});
+["touchstart","touchend","touchmove","click","pointerdown","pointerup","keydown"].forEach(function(evt){
+  document.addEventListener(evt,userActivate,{passive:true});
 });
-window.addEventListener("scroll",userActivate,{once:true,passive:true});
+window.addEventListener("scroll",userActivate,{passive:true});
+window.addEventListener("wheel",userActivate,{passive:true});
 document.getElementById("musicBtn").addEventListener("click",function(e){
   e.stopPropagation();
   if(playing){bgm.pause();playing=false;this.classList.add("muted");}
